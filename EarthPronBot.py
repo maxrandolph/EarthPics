@@ -1,3 +1,5 @@
+# Quick script for getting top pics from r/EarthPorn
+
 import praw
 import re
 import glob
@@ -13,8 +15,6 @@ def downloadImage(imageUrl, localFileName):
         for chunk in response.iter_content(4096):
             fo.write(chunk)
 
-
-
 user_agent = ("EarthPronBot")
 r = praw.Reddit(user_agent = user_agent)
 subreddit = r.get_subreddit("EarthPorn")
@@ -23,7 +23,6 @@ urlCheck = re.compile(r'(http:\/\/imgur\.com\/)([a-zA-Z0-9])+')
 for submission in subreddit.get_hot(limit = 15):
     print(submission.url)
     if "imgur.com" not in submission.url and "i.redd.it" not in submission.url:
-        print("no imgur url")
         continue
     if submission.score < MIN_SCORE:
         continue
@@ -33,8 +32,3 @@ for submission in subreddit.get_hot(limit = 15):
     if urlCheck.match(submission.url):
         submission.url = submission.url[:7] + "i." + submission.url[7:] + ".jpg"
     downloadImage(submission.url,submission.title+".jpg")
-    #print ("Title: ", submission.title)
-    #print ("Text: ", submission.selftext)
-    #print ("Score: ", submission.score)
-    #print ("---------------------------------\n")
-    #print("link", submission.link)
